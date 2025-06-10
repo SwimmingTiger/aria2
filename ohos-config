@@ -1,0 +1,38 @@
+#!/bin/bash
+
+if [ "$COMMAND_LINE_TOOLS" = "" ]; then
+    echo 'No $COMMAND_LINE_TOOLS specified.'
+    exit 1
+fi
+
+TOOLCHAIN=$COMMAND_LINE_TOOLS/sdk/default/openharmony/native/llvm
+SYSROOT=$COMMAND_LINE_TOOLS/sdk/default/openharmony/native/sysroot
+PREFIX=$SYSROOT/usr
+
+./configure \
+    --host=aarch64-linux-android \
+    --build=`dpkg-architecture -qDEB_BUILD_GNU_TYPE` \
+    --enable-libaria2 \
+    --disable-nls \
+    --without-gnutls \
+    --with-openssl \
+    --without-sqlite3 \
+    --without-libxml2 \
+    --with-libexpat \
+    --with-libcares \
+    --with-libz \
+    --without-libssh2 \
+    --prefix=$PREFIX \
+    AR=$TOOLCHAIN/bin/llvm-ar \
+    AS=$TOOLCHAIN/bin/llvm-as \
+    CC=$TOOLCHAIN/bin/aarch64-unknown-linux-ohos-clang \
+    CXX=$TOOLCHAIN/bin/aarch64-unknown-linux-ohos-clang++ \
+    LD=$TOOLCHAIN/bin/lld \
+    RANLIB=$TOOLCHAIN/bin/llvm-ranlib \
+    STRIP=$TOOLCHAIN/bin/llvm-strip \
+    CXXFLAGS="--sysroot=$SYSROOT -Os -g" \
+    CFLAGS="--sysroot=$SYSROOT -Os -g" \
+    CPPFLAGS="--sysroot=$SYSROOT -fPIE" \
+    LDFLAGS="--sysroot=$SYSROOT -fPIE -pie" \
+    PKG_CONFIG_LIBDIR="$PREFIX/lib/pkgconfig:$PREFIX/lib/aarch64-linux-ohos/pkgconfig:$PREFIX/share/pkgconfig"
+
