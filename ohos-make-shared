@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+if [ "$COMMAND_LINE_TOOLS" = "" ]; then
+    echo 'No $COMMAND_LINE_TOOLS specified.'
+    exit 1
+fi
+
+TOOLCHAIN=$COMMAND_LINE_TOOLS/sdk/default/openharmony/native/llvm
+SYSROOT=$COMMAND_LINE_TOOLS/sdk/default/openharmony/native/sysroot
+
+set -x
+
+make -j$(nproc)
+
+cd ./src
+
+$TOOLCHAIN/bin/aarch64-unknown-linux-ohos-clang++ -pipe --sysroot=$SYSROOT -Os -g -fPIC -shared -o .libs/aria2c.so main.o ./.libs/libaria2.so -L$SYSROOT/usr/lib
+
+file $PWD/.libs/aria2c.so
+
