@@ -14,7 +14,7 @@ make -j$(nproc)
 
 cd ./src
 
-$TOOLCHAIN/bin/aarch64-unknown-linux-ohos-clang++ -pipe --sysroot=$SYSROOT -Os -g -fPIC -shared -o .libs/aria2c.so main.o ./.libs/libaria2.so -L$SYSROOT/usr/lib
+$TOOLCHAIN/bin/aarch64-unknown-linux-ohos-clang++ -pipe --sysroot=$SYSROOT -Os -g -fPIC -shared -o .libs/aria2c.so main.o -L./.libs -laria2 -L$SYSROOT/usr/lib
 
 file $PWD/.libs/aria2c.so
 
